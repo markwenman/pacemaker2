@@ -7,6 +7,7 @@ import models.Location;
 import models.User;
 import models.Friend;
 import models.Message;
+import models.Summary;
 
 public class Parser {
 
@@ -40,7 +41,18 @@ public class Parser {
 	    System.out.println(messages.toString());
 		  }
 	  
- 
+  public void renderSummary(Summary summary) {
+	    System.out.println(summary.toString());
+	  }
+	  
+public void renderSummarys(Collection<Summary> summarys) {
+	    System.out.println(summarys.toString());
+		  }
+	  
+  
+  
+  
+  
  
 
   public void renderActivity(Activity activities) {

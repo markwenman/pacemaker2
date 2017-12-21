@@ -1,11 +1,11 @@
-package utils;
+package parsers;
 
 //import static org.fusesource.jansi.Ansi.Color.*;
 
 
 
 
-public class Validate
+public class Info
 {
 
   // Relevant Colors to be used in System

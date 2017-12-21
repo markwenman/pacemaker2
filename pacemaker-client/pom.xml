@@ -27,7 +27,6 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -38,6 +37,7 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+<!-- https://mvnrepository.com/artifact/org.jooq/jooq -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>

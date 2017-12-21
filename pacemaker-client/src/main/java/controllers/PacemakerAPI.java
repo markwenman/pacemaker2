@@ -12,6 +12,7 @@ import models.Location;
 import models.User;
 import models.Friend;
 import models.Message;
+import models.Summary;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -42,7 +43,13 @@ interface PacemakerInterface {
   
   @POST("/friends")
   Call<Friend> followFriend(@Body Friend friend);
-   
+ 
+  
+  @POST("/summary")
+  Call<Summary> createSummary(@Body Summary summary);
+ 
+  
+  
   // Getting ALL so List
   @GET("/friends")
   Call<List<Friend>> getFriend();
@@ -58,7 +65,8 @@ interface PacemakerInterface {
   @POST("/users/{id}/messages")
   Call<Message> addMessage(@Path("id") String id,@Body Message message);
   
-
+  @GET("/summary")
+  Call<List<Summary>> getSummary();
   
   
   
@@ -70,7 +78,9 @@ interface PacemakerInterface {
 
   @DELETE("/users/{id}/activities")
   Call<String> deleteActivities(@Path("id") String id);
+
   
+ 
   
   @GET("/users/{id}/activities/{activityId}")
   Call<Activity> getActivity(@Path("id") String id, @Path("activityId") String activityId);
@@ -78,6 +88,8 @@ interface PacemakerInterface {
   @POST("/users/{id}/activities/{activityId}/locations")
   Call<Location> addLocation(@Path("id") String id, @Path("activityId") String activityId,
       @Body Location location);
+
+Call<Summary> createSummary(String name, double distance);
 }
 
 
@@ -143,6 +155,19 @@ public class PacemakerAPI {
 	    return activities;
 	  }
   
+  public Collection<Summary> getSummary() {
+	    Collection<Summary> summary = null;
+	    try {
+	      Call<List<Summary>> call = pacemakerInterface.getSummary();
+	      Response<List<Summary>> response = call.execute();
+	      summary = response.body();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	    return summary;
+	  }
+  
+  
   
   
   
@@ -186,7 +211,22 @@ public class PacemakerAPI {
 	    }
 	    return returnedMessage;
 	  }
- 
+
+  public Summary createSummary(String name, double distance) {
+	   Summary returnedSummary = null;
+	    try {
+	      Call<Summary> call =
+	        pacemakerInterface.createSummary(new Summary(name, distance));
+	      Response<Summary> response = call.execute();
+	     returnedSummary = response.body();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	    return returnedSummary;
+	  }
+  
+  
+  
   public Activity createActivity(String id, String type, String location, double distance) {
 	    Activity returnedActivity = null;
 	    try {

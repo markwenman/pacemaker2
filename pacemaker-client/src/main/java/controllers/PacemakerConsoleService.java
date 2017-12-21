@@ -1,32 +1,30 @@
 package controllers;
 
-import com.google.common.base.Optional;
-import asg.cliche.Command;
-import asg.cliche.Param;
-import asg.cliche.Shell;
-
-import static models.Fixtures.users;
-import static models.Fixtures.friends;
-
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
+import java.util.stream.Collectors;
 
+
+import com.google.common.base.Optional;
+
+import asg.cliche.Command;
+import asg.cliche.Param;
 import models.Activity;
-import models.User;
 import models.Friend;
-
+import models.Summary;
+import models.User;
 import parsers.AsciiTableParser;
+import parsers.Info;
 import parsers.Parser;
-import utils.Validate;
 
-import com.bethecoder.ascii_table.impl.CollectionASCIITableAware;
-import com.bethecoder.ascii_table.spec.IASCIITableAware;
+//import com.bethecoder.ascii_table.impl.CollectionASCIITableAware;
+//import com.bethecoder.ascii_table.spec.IASCIITableAware;
 
 
 public class PacemakerConsoleService {
@@ -56,19 +54,20 @@ public class PacemakerConsoleService {
       if (user.get().password.equals(password)) {
         loggedInUser = user.get();
         ErrCount = 0 ;
-        Validate.info("Logged in as " + loggedInUser.email);
+        Info.info("Logged in as " + loggedInUser.email);
         console.println("ok");
       }
     }
       else {
     	 ErrCount = ErrCount + 1 ;
     	 
-    	if ( ErrCount < 3 ) {  
-           Validate.err("Error on login","This user is not Registered, try again ...");
+    	if ( ErrCount < 4 ) {  
+           Info.err("Error on login","This user is not Registered, try again ...");
     	   } 
     	   else 
     	   { 
-    	   Validate.err("Login Error","Too many attempts, goodbye");
+    	   Info.err("Login Error","Too many attempts, goodbye");
+    	  System.exit(1) ;
     	   }
     	}
    }
@@ -76,7 +75,7 @@ public class PacemakerConsoleService {
 
   @Command(description = "Logout: Logout current user")
   public void logout() {
-    Validate.info("Logging out " + loggedInUser.email);
+    Info.info("Logging out " + loggedInUser.email);
     console.println("ok");
     loggedInUser = null;
   }
@@ -94,7 +93,7 @@ public class PacemakerConsoleService {
        {  
 		   console.renderUser(paceApi.createUser(firstName, lastName, email, password)); 
 	   }  else          {       
-         Validate.err("Register a User ", "Invalid Email, please enter a valid email that includes a @" );
+         Info.err("Register a User ", "Invalid Email, please enter a valid email that includes a @" );
        }
     }
 
@@ -119,6 +118,29 @@ public class PacemakerConsoleService {
 	      }
 	  }
 	
+  
+  @Command(description = "Message All Friends: send a message to all friends")
+  public void messageAllFriends(@Param(name = "message") String message) {
+	
+      Collection<Friend> friend = paceApi.getFriends();
+      	  
+    		  if (friend.isEmpty()  )
+    	      {
+    	        System.out.println ( "No User Data");
+    	      }
+    	      else
+    	      {
+    	    	  for (Friend a : friend) {  
+    	    		  User Friendid = paceApi.getUserByEmail(a.email) ;
+    	    		  
+    	    		  
+	    	paceApi.createMessage(Friendid.id, message); 
+	      }
+    	    Info.info("Message has been sent to all Friends");
+    	      }
+	  }
+  
+  
   
   
   
@@ -167,22 +189,22 @@ public class PacemakerConsoleService {
          {
             	 paceApi.deleteFriend(email);
          
-        	 Validate.info("Friend Deleted");    
+        	 Info.info("Friend Deleted");    
          break ;
          }
          case "no":
          {
-         Validate.info("No problem - record stays!");    
+         Info.info("No problem - record stays!");    
          break; // optional
          }
          default :
-           Validate.err("Delete a Friend", "Invalid option - yes or no are the options");
+           Info.err("Delete a Friend", "Invalid option - yes or no are the options");
          break;
          }
        }
        else
        {      
-         Validate.warn("Unfollow a Friend", "Invalid Friend email");    
+         Info.warn("Unfollow a Friend", "Invalid Friend email");    
        }
      
  }
@@ -273,8 +295,17 @@ public class PacemakerConsoleService {
 	  public void activityReport() {
 	    Optional<User> user = Optional.fromNullable(loggedInUser);
 	    if (user.isPresent()) {
-	      console.renderActivities(paceApi.listActivities(user.get().id, "type"));
-	    }
+	        List<Activity> reportActivities = new ArrayList<>();
+	      Collection<Activity> usersActivities = paceApi.getActivities(user.get().id);
+	      usersActivities.forEach(a -> {
+	    	  reportActivities.add(a);
+	      });
+	      
+	      reportActivities.sort((a1, a2) -> a1.type.compareTo(a2.type));
+	  
+	           console.renderActivities(reportActivities);
+	      
+	      }
 	  }
   
   
@@ -304,6 +335,9 @@ public class PacemakerConsoleService {
     }
   }
 
+  
+  
+  
   @Command(description = "List all locations for a specific activity")
   public void listActivityLocations(@Param(name = "activity-id") String id) {
  
@@ -322,21 +356,170 @@ public class PacemakerConsoleService {
  
 
   // Good Commands
-
-
-
+  
 
   @Command(
       description = "Distance Leader Board: list summary distances of all friends, sorted longest to shortest")
-  public void distanceLeaderBoard() {}
+  public void distanceLeaderBoard() {
+	  
 
+	  /**
+	  List<Summary> list = Arrays.asList(
+	            new Summary( "P1", 300),
+	            new Summary( "P2", 600),
+	            new Summary( "P3", 30),
+	            new Summary( "P3", 70),
+	            new Summary( "P1", 360),
+	            new Summary( "P4", 320),
+	            new Summary( "P4", 500));
+
+
+// Replace above by expression of adding all acticities for specificy Users
+	  
+	      	 
+	  
+  
+	        List<Summary> transform = list.stream()
+	            .collect(Collectors.groupingBy(summary -> summary.name))
+	            .entrySet().stream()
+	            .map(e -> e.getValue().stream()
+	                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
+	                .map(f -> f.get())
+	                .collect(Collectors.toList());
+
+	        
+	        
+	        List<Summary> slist2 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
+	    		System.out.println("---Sorting using Comparator by Distance with reverse order---");
+	    	     
+ 	              slist2.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
+
+	**/
+ 	             /**
+ 	              * 
+ 	              * 
+ 	             List<Friend> friendlist = new ArrayList<>(); 
+ 	             
+ 	            System.out.println("This far") ;
+ 	            System.out.println(friendlist.size()) ; 	             
+ 	           //  Collection<Activity> usersActivities = paceApi.getActivities() ;
+ 	  	       //        usersActivities.forEach(a ->  new Summary(e.id, a.distance)) ;
+ 	  	    	    
+ 	           for(int i = 0; i < friendlist.size(); i++) {
+ 	              System.out.println(friendlist.get(i).email);
+ 	          }
+ 	         
+
+	           
+	            
+	    	    Optional<User> user = Optional.fromNullable(loggedInUser);
+	    	    if (user.isPresent()) {
+	    	        List<Activity> reportActivities = new ArrayList<>();
+	    	      Collection<Activity> usersActivities = paceApi.getActivities(user.get().id);
+	    	      usersActivities.forEach(a -> {
+	    	    	  reportActivities.add(a);
+	    	      });
+	    	      
+	    	      reportActivities.sort((a1, a2) -> a1.type.compareTo(a2.type));
+	    	  
+	    	           console.renderActivities(reportActivities);
+	    	           
+	    	           
+	    	           
+	    	           Collection<CCGroupBO> ccGroupCol = new ArrayList<CCGroupBO>()
+…
+									for(CCGroupBO newBo : ccGroupCol){
+    										System.out.println(newBo.getGroupName());
+}
+	    	      
+	    	        public static List<Activity> activities = new ArrayList<>(
+      Arrays.asList(new Activity("walk", "fridge", 0.001),
+
+	    	      	  List<Summary> list = Arrays.asList(
+	            new Summary( "P1", 300),
+
+	    	      
+	    	      }
+**/	               
+	    	    
+	                   Collection<Friend> friendslist = paceApi.getFriends();
+	                		   for(Friend nextu : friendslist){
+	                		       User userf = paceApi.getUserByEmail(nextu.email);
+	                		       
+	                		       
+	                		       System.out.println("Email " + nextu.email) ;
+	                		       System.out.println("UserID " + userf.id) ;
+
+	                		       
+	                		       Collection<Activity> usersActivities = paceApi.getActivities(userf.id);
+	         
+	                		      for( Activity nextact: usersActivities){
+	                		         	 paceApi.createSummary(userf.id, nextact.distance);
+	                		    	        System.out.println(nextact.distance);
+	                		    	        System.out.println(nextact.type);
+		                		   };   
+	                 
+         
+	                		   
+	                		   
+	                		   console.renderSummarys(paceApi.getSummary());
+	                		   }		 
+	                		   
+	                		   
+	                		   // ABOVE WRITES TO THE TEMP TABLE
+	                	      //  List<Summary> list = new ArrayList<>();
+
+	       	               List<Summary> list = new ArrayList<>();
+
+	                		//   list.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
+	                		   
+	                		   
+	                    		  
+	                		   
+	                //	 System.out.println("SHould be a list of 5 activities for the 2 Friends");
+	                      
+	     	          //    list.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
+	                		   
+	                		  
+	                		  
+	               	        List<Summary> transform = list.stream()
+	               	            .collect(Collectors.groupingBy(summary -> summary.name))
+	               	            .entrySet().stream()
+	               	            .map(e -> e.getValue().stream()
+	               	                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
+	               	                .map(f -> f.get())
+	               	                .collect(Collectors.toList());
+
+	               	        
+	               	        
+	               	        List<Summary> slist3 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
+	               	    		System.out.println("---Sorting using Comparator by Distance with reverse order---");
+	               	    	     
+	                	              slist3.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
+
+  
+  
+	                		   
+	                		   
+  }
+	
+	                		   
+	
+	                   
+
+  
+  
+  
+  
+  
+  
+  
   // Excellent Commands
 
   @Command(description = "Distance Leader Board: distance leader board refined by type")
   public void distanceLeaderBoardByType(@Param(name = "byType: type") String type) {}
 
-  @Command(description = "Message All Friends: send a message to all friends")
-  public void messageAllFriends(@Param(name = "message") String message) {}
+
 
   @Command(
       description = "Location Leader Board: list sorted summary distances of all friends in named location")

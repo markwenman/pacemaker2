@@ -2,7 +2,7 @@ package controllers;
 
 import asg.cliche.Shell;
 import asg.cliche.ShellFactory;
-import utils.Validate;
+import parsers.Info;
 
 
 public class Main {
@@ -11,7 +11,7 @@ public class Main {
 	    PacemakerConsoleService main = new PacemakerConsoleService();
 	    Shell shell = ShellFactory
 	        .createConsoleShell("pm", "Welcome to Marks pacemaker-console v2", main);
-	  Validate.info("Use the ?list for the full set of menus");
+	  Info.info("Use the ?list for the full set of menus");
 	    shell.commandLoop();
 	  }
 	}

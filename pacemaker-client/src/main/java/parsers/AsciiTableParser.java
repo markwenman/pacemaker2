@@ -12,6 +12,7 @@ import models.Location;
 import models.User;
 import models.Friend;
 import models.Message;
+import models.Summary;
 
 public class AsciiTableParser extends Parser {
 
@@ -43,6 +44,19 @@ public class AsciiTableParser extends Parser {
 	    }
 	  }
 
+  public void renderSummary(Summary summary) {
+	    if (summary != null) {
+	      renderSummarys(Arrays.asList(summary));
+	      System.out.println("ok");
+	    } else {
+	      System.out.println("summary not found");
+	    }
+	  }
+  
+  
+  
+  
+  
   
   public void renderActivity(Activity activity) {
 	    if (activity != null) {
@@ -95,7 +109,24 @@ public class AsciiTableParser extends Parser {
 	    } else {
 	      System.out.println("ascii not found");
 	    }
-	  }
+  }
+	    public void renderSummarys(Collection<Summary> summarys) {
+		    if (summarys != null) {
+		      if (!summarys.isEmpty()) {
+		        List<Summary> summaryList = new ArrayList<Summary>(summarys);
+		        IASCIITableAware asciiTableAware = new CollectionASCIITableAware<Summary>(summaryList,
+		        		"id", "name", "distance");
+		        System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
+		      }
+		      System.out.println("ok");
+		    } else {
+		      System.out.println("summary ascii not found");
+		    }
+
+  
+  
+  
+  }
 
   
   
