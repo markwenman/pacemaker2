@@ -45,9 +45,14 @@ interface PacemakerInterface {
   Call<Friend> followFriend(@Body Friend friend);
  
   
+  @DELETE("/summary")
+  Call<String> deleteSummary();
+  
   @POST("/summary")
   Call<Summary> createSummary(@Body Summary summary);
- 
+
+  @GET("/summary")
+  Call<List<Summary>> getSummary();
   
   
   // Getting ALL so List
@@ -65,8 +70,7 @@ interface PacemakerInterface {
   @POST("/users/{id}/messages")
   Call<Message> addMessage(@Path("id") String id,@Body Message message);
   
-  @GET("/summary")
-  Call<List<Summary>> getSummary();
+
   
   
   
@@ -276,6 +280,9 @@ public class PacemakerAPI {
     return activity;
   }
 
+ 
+  
+  
   public void deleteActivities(String id) {
     try {
       Call<String> call = pacemakerInterface.deleteActivities(id);
@@ -339,6 +346,15 @@ public class PacemakerAPI {
     return user;
   }
 
+  
+  public void deleteSummary() {
+	    try {
+	        Call<String> call = pacemakerInterface.deleteSummary();
+	        call.execute();
+	      } catch (Exception e) {
+	        System.out.println(e.getMessage());
+	      }
+	    }
 
 
 

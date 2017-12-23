@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class PacemakerConsoleService {
   private PacemakerAPI paceApi = new PacemakerAPI("http://localhost:7000");
   private Parser console = new AsciiTableParser();
   private User loggedInUser = null;
-  private String Friendmsg  = null;
+  //private String Friendmsg  = null;
   
   private int ErrCount  = 0  ;
   
@@ -362,8 +363,8 @@ public class PacemakerConsoleService {
       description = "Distance Leader Board: list summary distances of all friends, sorted longest to shortest")
   public void distanceLeaderBoard() {
 	  
-
-	  /**
+/**
+	  
 	  List<Summary> list = Arrays.asList(
 	            new Summary( "P1", 300),
 	            new Summary( "P2", 600),
@@ -376,9 +377,6 @@ public class PacemakerConsoleService {
 
 // Replace above by expression of adding all acticities for specificy Users
 	  
-	      	 
-	  
-  
 	        List<Summary> transform = list.stream()
 	            .collect(Collectors.groupingBy(summary -> summary.name))
 	            .entrySet().stream()
@@ -386,138 +384,148 @@ public class PacemakerConsoleService {
 	                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
 	                .map(f -> f.get())
 	                .collect(Collectors.toList());
-
 	        
-	        
-	        List<Summary> slist2 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
-	    		System.out.println("---Sorting using Comparator by Distance with reverse order---");
+   List<Summary> slist = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
+	System.out.println("---Sorting using Comparator by Distance with reverse order---");
 	    	     
- 	              slist2.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
+ 	slist.forEach( e ->  System.out.println( "Name: "+e.getName()+", Distance :"+e.getDistance()));
 
-	**/
- 	             /**
- 	              * 
- 	              * 
- 	             List<Friend> friendlist = new ArrayList<>(); 
- 	             
- 	            System.out.println("This far") ;
- 	            System.out.println(friendlist.size()) ; 	             
- 	           //  Collection<Activity> usersActivities = paceApi.getActivities() ;
- 	  	       //        usersActivities.forEach(a ->  new Summary(e.id, a.distance)) ;
- 	  	    	    
- 	           for(int i = 0; i < friendlist.size(); i++) {
- 	              System.out.println(friendlist.get(i).email);
- 	          }
- 	         
-
-	           
-	            
-	    	    Optional<User> user = Optional.fromNullable(loggedInUser);
-	    	    if (user.isPresent()) {
-	    	        List<Activity> reportActivities = new ArrayList<>();
-	    	      Collection<Activity> usersActivities = paceApi.getActivities(user.get().id);
-	    	      usersActivities.forEach(a -> {
-	    	    	  reportActivities.add(a);
-	    	      });
-	    	      
-	    	      reportActivities.sort((a1, a2) -> a1.type.compareTo(a2.type));
-	    	  
-	    	           console.renderActivities(reportActivities);
-	    	           
-	    	           
-	    	           
-	    	           Collection<CCGroupBO> ccGroupCol = new ArrayList<CCGroupBO>()
-…
-									for(CCGroupBO newBo : ccGroupCol){
-    										System.out.println(newBo.getGroupName());
-}
-	    	      
-	    	        public static List<Activity> activities = new ArrayList<>(
-      Arrays.asList(new Activity("walk", "fridge", 0.001),
-
-	    	      	  List<Summary> list = Arrays.asList(
-	            new Summary( "P1", 300),
-
-	    	      
-	    	      }
-**/	               
-	    	    
+**/ 			  
+                   	  paceApi.deleteSummary() ;
+	  
 	                   Collection<Friend> friendslist = paceApi.getFriends();
 	                		   for(Friend nextu : friendslist){
 	                		       User userf = paceApi.getUserByEmail(nextu.email);
-	                		       
-	                		       
-	                		       System.out.println("Email " + nextu.email) ;
-	                		       System.out.println("UserID " + userf.id) ;
-
-	                		       
+		                		       
 	                		       Collection<Activity> usersActivities = paceApi.getActivities(userf.id);
 	         
 	                		      for( Activity nextact: usersActivities){
 	                		         	 paceApi.createSummary(userf.id, nextact.distance);
-	                		    	        System.out.println(nextact.distance);
-	                		    	        System.out.println(nextact.type);
-		                		   };   
-	                 
-         
-	                		   
-	                		   
-	                		   console.renderSummarys(paceApi.getSummary());
-	                		   }		 
-	                		   
+	//	                                 list.add(userf.id, nextact.distance);
+	                		      };   
+                    		   }	                		   
+	           		console.renderSummarys(paceApi.getSummary());
+	                		   		 
+                    		
+	    	    	        //   Collection<Summary> summaryx = new ArrayList<Summary>();
+	    	    	       // 		 for(Summary newBo : summaryx){
+	    	    	        //		       System.out.println(newBo.distance);
+	    	    	       // 		   }
+	    	    	           
 	                		   
 	                		   // ABOVE WRITES TO THE TEMP TABLE
 	                	      //  List<Summary> list = new ArrayList<>();
 
-	       	               List<Summary> list = new ArrayList<>();
+	       	            //   List<Summary> list = new ArrayList<>();
 
 	                		//   list.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
 	                		   
 	                		   
 	                    		  
-	                		   
-	                //	 System.out.println("SHould be a list of 5 activities for the 2 Friends");
-	                      
-	     	          //    list.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
-	                		   
-	                		  
-	                		  
-	               	        List<Summary> transform = list.stream()
-	               	            .collect(Collectors.groupingBy(summary -> summary.name))
-	               	            .entrySet().stream()
-	               	            .map(e -> e.getValue().stream()
-	               	                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
-	               	                .map(f -> f.get())
-	               	                .collect(Collectors.toList());
+	                		
+    	//   	    List<Summary> list2 = new ArrayList<>();
 
-	               	        
-	               	        
-	               	        List<Summary> slist3 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
-	               	    		System.out.println("---Sorting using Comparator by Distance with reverse order---");
-	               	    	     
-	                	              slist3.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
-
-  
-  
-	                		   
+	              		//  List<Collection<Summary>> list2 = Arrays.asList(paceApi.getSummary());
+	                		
+	                		  
+	                		//  coll.stream().collect(Collectors.toList());
+	                		//  List list = new ArrayList(paceApi.getSummary());
+	                //		  Collections.sort(list);
+	         //  	 List<Summary> list = Arrays.asList(
+	     	 //           new Summary( "P1", 300));
+/**
+	           
+	              		  
+	            **/  		  
+        		
+	                List<Summary> reportActivities = new ArrayList<>();
+	                Collection<Summary> usersActivities = paceApi.getSummary();
+	                usersActivities.forEach(a -> {
+	              	  reportActivities.add(a);
+	                });
+          			
+	           			
+	           	
+	           		
+	     	     //   Collection<Summary> a =  new ArrayList<Summary>();
+					List<Summary> transform =  reportActivities.stream()
+							
+	            		            .collect(Collectors.groupingBy(summary -> summary.name))
+	            		            .entrySet().stream()
+	            		            .map(e -> e.getValue().stream()
+	            		                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
+	            		                .map(f -> f.get())
+	            		                .collect(Collectors.toList());
+	            		        
+	            		        
+    List<Summary> list2 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
+    System.out.println("---Sorting2 using Comparator by Distance with reverse order---");
+	            		    	     
+	            list2.forEach( e ->  System.out.println( "Name: "+e.getName()+"  "
+	            +paceApi.getUser(e.getName()).lastname + ", Distance :"+e.getDistance()));
 	                		   
   }
 	
-	                		   
-	
-	                   
-
-  
-  
-  
-  
+	  
   
   
   
   // Excellent Commands
 
   @Command(description = "Distance Leader Board: distance leader board refined by type")
-  public void distanceLeaderBoardByType(@Param(name = "byType: type") String type) {}
+  public void distanceLeaderBoardByType(@Param(name = "byType: type") String type) {
+	  
+   	  paceApi.deleteSummary() ;
+	  
+       Collection<Friend> friendslist = paceApi.getFriends();
+    		   for(Friend nextu : friendslist){
+    		       User userf = paceApi.getUserByEmail(nextu.email);
+        		       
+    		       Collection<Activity> usersActivities = paceApi.getActivities(userf.id);
+
+    		      for( Activity nextact: usersActivities)
+    		      {
+    		    	  if ( nextact.type == type ) {
+    		         	 paceApi.createSummary(userf.id, nextact.distance);
+    		    	  }
+//	                                 list.add(userf.id, nextact.distance);
+    		      };   
+    		   }	                		   
+		console.renderSummarys(paceApi.getSummary());
+
+	
+		
+		
+        List<Summary> reportActivities = new ArrayList<>();
+        Collection<Summary> usersActivities = paceApi.getSummary();
+        usersActivities.forEach(a -> {
+      	  reportActivities.add(a);
+        });
+			
+   			
+   	
+   		
+	     //   Collection<Summary> a =  new ArrayList<Summary>();
+		List<Summary> transform =  reportActivities.stream()
+				
+    		            .collect(Collectors.groupingBy(summary -> summary.name))
+    		            .entrySet().stream()
+    		            .map(e -> e.getValue().stream()
+    		                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
+    		                .map(f -> f.get())
+    		                .collect(Collectors.toList());
+    		        
+    		        
+List<Summary> list2 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
+System.out.println("---Sorting2 using Comparator by Distance with reverse order---");
+    		    	     
+    list2.forEach( e ->  System.out.println( "Name: "+e.getName()+"  "
+    +paceApi.getUser(e.getName()).lastname + ", Distance :"+e.getDistance()));
+	  
+	  
+	  
+	  
+  }
 
 
 

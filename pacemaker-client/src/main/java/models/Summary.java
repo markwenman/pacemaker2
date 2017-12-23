@@ -54,6 +54,8 @@ import com.google.common.base.Objects;
 	        .toString();
 	  }
 
+	  
+	  
 	  @Override
 	  public int hashCode() {
 	    return Objects.hashCode(this.id, this.name, this.distance);
