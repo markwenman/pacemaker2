@@ -485,10 +485,13 @@ public class PacemakerConsoleService {
 
     		      for( Activity nextact: usersActivities)
     		      {
-    		    	  if ( nextact.type == type ) {
+    		    	  System.out.println(nextact.type);
+      		          
+    		    	   if(nextact.type.equals(type) ) {
+    		    		  System.out.println("Found 1");
     		         	 paceApi.createSummary(userf.id, nextact.distance);
     		    	  }
-//	                                 list.add(userf.id, nextact.distance);
+    		   
     		      };   
     		   }	                		   
 		console.renderSummarys(paceApi.getSummary());
@@ -517,7 +520,7 @@ public class PacemakerConsoleService {
     		        
     		        
 List<Summary> list2 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
-System.out.println("---Sorting2 using Comparator by Distance with reverse order---");
+System.out.println("---Sorting2 using Comparator by Distance for Activity ---" + type );
     		    	     
     list2.forEach( e ->  System.out.println( "Name: "+e.getName()+"  "
     +paceApi.getUser(e.getName()).lastname + ", Distance :"+e.getDistance()));
