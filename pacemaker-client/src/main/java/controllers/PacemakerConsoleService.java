@@ -77,13 +77,15 @@ public class PacemakerConsoleService {
   @Command(description = "Logout: Logout current user")
   public void logout() {
     Info.info("Logging out " + loggedInUser.email);
-    console.println("ok");
+ //   console.println("ok");
     loggedInUser = null;
   }
   
 
   
   // CREATE RECORDS
+  
+  // Ceck for duplicate email
   
   @Command(description = "Register: Create an account for a new user")
   public void register(@Param(name = "first name") String firstName,
@@ -92,21 +94,50 @@ public class PacemakerConsoleService {
 	  
 	   if ( email.toLowerCase().contains("@".toLowerCase()) ) 
        {  
-		   console.renderUser(paceApi.createUser(firstName, lastName, email, password)); 
-	   }  else          {       
-         Info.err("Register a User ", "Invalid Email, please enter a valid email that includes a @" );
-       }
-    }
+			  User Friendmsg = paceApi.getUserByEmail(email) ;
+			  Optional<User> user = Optional.fromNullable(Friendmsg);
+
+			    if (user.isPresent()) {
+			    	Info.err("Register a User ","Email exists already -  no duplicates allowed");
+			    }
+			     else
+			    {
+		          console.renderUser(paceApi.createUser(firstName, lastName, email, password)); 
+	            }  }
+			    else          
+			    {       
+                   Info.err("Register a User ", "Invalid Email, please enter a valid email that includes a @" );
+                  }
+   
+  }
 
   
+  
+  
+  // Validate for a correct email
   
   @Command(description = "Follow Friend: Follow a specific friend")
   public void follow(@Param(name = "email") String email) {
-    console.renderFriend(paceApi.createFriend(email)); 
+
 	  
+	  User Friendmsg = paceApi.getUserByEmail(email) ;
+	  Optional<User> user = Optional.fromNullable(Friendmsg);
+
+	    if (user.isPresent()) {
+
+	  paceApi.getUserByEmail(email);
+	  console.renderFriend(paceApi.createFriend(email)); 
+	  
+	    }
+	    else
+	    {
+	    	Info.err("Follow a Friend","Email is not found");
+	    }
   }
  
 
+  // Validate for a correct email
+  
   
   @Command(description = "Message Friend: send a message to a friend")
   public void addMessage(@Param(name = "email") String email, @Param(name = "messages") String messages) {
@@ -117,6 +148,12 @@ public class PacemakerConsoleService {
 	    if (user.isPresent()) {
 	    	console.renderMessage(paceApi.createMessage(user.get().id, messages)); 
 	      }
+	    else
+	    {
+	    	Info.err("Message a Friend","Email is not found");
+	    }
+	    
+	    
 	  }
 	
   
@@ -342,10 +379,15 @@ public class PacemakerConsoleService {
   @Command(description = "List all locations for a specific activity")
   public void listActivityLocations(@Param(name = "activity-id") String id) {
  
+	  if ( loggedInUser.equals(null))
+	  { Info.err("List All Locations","You must be logged in to run this function") ;  }
+	  else
+	  {
     Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(loggedInUser.getId(), id));
     if (activity.isPresent()) {
       // console.renderLocations(activity.get().route);
     }
+	  }
   }
 
   
@@ -407,36 +449,7 @@ public class PacemakerConsoleService {
 	           		console.renderSummarys(paceApi.getSummary());
 	                		   		 
                     		
-	    	    	        //   Collection<Summary> summaryx = new ArrayList<Summary>();
-	    	    	       // 		 for(Summary newBo : summaryx){
-	    	    	        //		       System.out.println(newBo.distance);
-	    	    	       // 		   }
-	    	    	           
-	                		   
-	                		   // ABOVE WRITES TO THE TEMP TABLE
-	                	      //  List<Summary> list = new ArrayList<>();
-
-	       	            //   List<Summary> list = new ArrayList<>();
-
-	                		//   list.forEach( e ->  System.out.println( "Name: "+e.getName()+", Age:"+e.getDistance()));
-	                		   
-	                		   
-	                    		  
-	                		
-    	//   	    List<Summary> list2 = new ArrayList<>();
-
-	              		//  List<Collection<Summary>> list2 = Arrays.asList(paceApi.getSummary());
-	                		
-	                		  
-	                		//  coll.stream().collect(Collectors.toList());
-	                		//  List list = new ArrayList(paceApi.getSummary());
-	                //		  Collections.sort(list);
-	         //  	 List<Summary> list = Arrays.asList(
-	     	 //           new Summary( "P1", 300));
-/**
-	           
-	              		  
-	            **/  		  
+  		  
         		
 	                List<Summary> reportActivities = new ArrayList<>();
 	                Collection<Summary> usersActivities = paceApi.getSummary();
@@ -534,9 +547,57 @@ System.out.println("---Sorting2 using Comparator by Distance for Activity ---" +
 
   @Command(
       description = "Location Leader Board: list sorted summary distances of all friends in named location")
-  public void locationLeaderBoard(@Param(name = "location") String message) {}
+  public void locationLeaderBoard(@Param(name = "location") String location) {
 
-  // Outstanding Commands
+	  paceApi.deleteSummary() ;
+	  
+      Collection<Friend> friendslist = paceApi.getFriends();
+   		   for(Friend nextu : friendslist){
+   		       User userf = paceApi.getUserByEmail(nextu.email);
+       		       
+   		       Collection<Activity> usersActivities = paceApi.getActivities(userf.id);
 
-  // Todo
+   		      for( Activity nextact: usersActivities)
+   		      {
+   		    	  System.out.println(nextact.type);
+     		          
+   		    	   if(nextact.location.equals(location) ) {
+   		    		  System.out.println("Found 1");
+   		         	 paceApi.createSummary(userf.id, nextact.distance);
+   		    	  }
+   		   
+   		      };   
+   		   }	                		   
+		console.renderSummarys(paceApi.getSummary());
+
+	
+		
+		
+       List<Summary> reportActivities = new ArrayList<>();
+       Collection<Summary> usersActivities = paceApi.getSummary();
+       usersActivities.forEach(a -> {
+     	  reportActivities.add(a);
+       });
+			
+  			
+  	
+  		
+	     //   Collection<Summary> a =  new ArrayList<Summary>();
+		List<Summary> transform =  reportActivities.stream()
+				
+   		            .collect(Collectors.groupingBy(summary -> summary.name))
+   		            .entrySet().stream()
+   		            .map(e -> e.getValue().stream()
+   		                .reduce((f1,f2) -> new Summary(f1.name,f1.distance + f2.distance)))
+   		                .map(f -> f.get())
+   		                .collect(Collectors.toList());
+   		        
+   		        
+List<Summary> list2 = transform.stream().sorted(Comparator.comparing(Summary::getDistance).reversed()).collect(Collectors.toList());
+System.out.println("---Sorting2 using Comparator by Distance for Location ---" + location );
+   		    	     
+   list2.forEach( e ->  System.out.println( "Name: "+e.getName()+"  "
+   +paceApi.getUser(e.getName()).lastname + ", Distance :"+e.getDistance()));
+	  
+  }	  
 }

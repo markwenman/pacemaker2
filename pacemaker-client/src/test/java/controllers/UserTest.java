@@ -48,6 +48,14 @@ public class UserTest {
 	      assertNotEquals(user, homer);
   }
 
+	@Test
+	  public void testEmails()
+	  {    User homer  = new User ("homer", "simpson", "homer@simpson.com",  "secret");
+	       User homer2 = new User ("homer", "simpson", "homersimpson.com",  "secret"); 
+	  
+	    assertEquals(true, homer.email.toLowerCase().contains("@".toLowerCase()));
+	    assertEquals(false, homer2.email.toLowerCase().contains("@".toLowerCase()));
+	  }
 
 
 
