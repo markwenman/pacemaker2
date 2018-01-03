@@ -3,6 +3,9 @@ package parsers;
 import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.impl.CollectionASCIITableAware;
 import com.bethecoder.ascii_table.spec.IASCIITableAware;
+
+
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,8 +17,12 @@ import models.Friend;
 import models.Message;
 import models.Summary;
 
+
+
 public class AsciiTableParser extends Parser {
 
+
+	
   public void renderUser(User user) {
     if (user != null) {
       renderUsers(Arrays.asList(user));
@@ -38,18 +45,22 @@ public class AsciiTableParser extends Parser {
   public void renderMessage(Message message) {
 	    if (message != null) {
 	      renderMessages(Arrays.asList(message));
-	      System.out.println("ok");
+	  //    System.out.println("ok");
 	    } else {
-	      System.out.println("not found");
+//	      System.out.println("not found");
+	      Info.warn("Message List", "No Data Found");
+	      
 	    }
 	  }
 
   public void renderSummary(Summary summary) {
 	    if (summary != null) {
 	      renderSummarys(Arrays.asList(summary));
-	      System.out.println("ok");
+	    //  System.out.println("ok");
 	    } else {
-	      System.out.println("summary not found");
+	//      System.out.println("summary not found");
+	      Info.warn("Summary List", "No Data Found");
+	      
 	    }
 	  }
   
@@ -61,10 +72,10 @@ public class AsciiTableParser extends Parser {
   public void renderActivity(Activity activity) {
 	    if (activity != null) {
 	      renderActivities(Arrays.asList(activity));
-	      System.out.println("ok");
+	  //    System.out.println("ok");
 	    } else {
-	      System.out.println("not found");
-	    }
+	        Info.warn("Activity List", "No Data Found");
+	        	    }
 	  }
 
 
@@ -77,9 +88,9 @@ public class AsciiTableParser extends Parser {
             "lastname", "email");
         System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
       }
-      System.out.println("ok");
+    //  System.out.println("ok");
     } else {
-      System.out.println("not found");
+       Info.warn("User List", "No Data Found");
     }
   }
 
@@ -88,10 +99,12 @@ public class AsciiTableParser extends Parser {
 	    if (friends != null) {
 	      if (!friends.isEmpty()) {
 	        List<Friend> friendList = new ArrayList<Friend>(friends);
-	        IASCIITableAware asciiTableAware = new CollectionASCIITableAware<Friend>(friendList,"id", "email");
-	        System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
+	        IASCIITableAware asciiTableAware = new CollectionASCIITableAware<Friend>(friendList,"email");
+	        System.out.println(ASCIITable.getInstance().getTable(asciiTableAware)+ "" );
+ 		
+	        		
 	      }
-	      System.out.println("ok");
+	   //   System.out.println("ok");
 	    } else {
 	      System.out.println("ascii not found");
 	    }
@@ -105,7 +118,7 @@ public class AsciiTableParser extends Parser {
 	        		 "id", "messages");
 	        System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
 	      }
-	      System.out.println("ok");
+	 //     System.out.println("ok");
 	    } else {
 	      System.out.println("ascii not found");
 	    }
@@ -118,9 +131,9 @@ public class AsciiTableParser extends Parser {
 		        		"id", "name", "distance");
 		        System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
 		      }
-		      System.out.println("ok");
+		  //    System.out.println("ok");
 		    } else {
-		      System.out.println("summary ascii not found");
+		      Info.warn("Summary List", "No Data Found");
 		    }
 
   
@@ -141,10 +154,9 @@ public class AsciiTableParser extends Parser {
             "type", "location", "distance");
         System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
       }
-      System.out.println("ok");
     } else {
-      System.out.println("not found");
-    }
+        Info.warn("Activities List", "No Data Found");
+            }
   }
 
   public void renderLocations(List<Location> locations) {
@@ -155,9 +167,9 @@ public class AsciiTableParser extends Parser {
             "latitude", "longitude");
         System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
       }
-      System.out.println("ok");
+//      System.out.println("ok");
     } else {
-      System.out.println("not found");
-    }
+        Info.warn("Location List", "No Data Found");
+          }
   }
 }

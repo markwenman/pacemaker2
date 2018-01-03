@@ -1,8 +1,12 @@
 package controllers;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,4 +56,25 @@ public class ActivityTest {
     returnedActivity = pacemaker.getActivity(homer.id, returnedActivity.id);
     assertNull (returnedActivity);
   }
+
+	@Test
+	   public void testActivityCountsForDeletions ()
+	   {
+		// Activity activity = new Activity("sprint", "pub", 4.5);
+		// Activity returnedActivity = pacemaker.createActivity(homer.id, activity.type, activity.location, activity.distance);
+		 	
+		int count = pacemaker.getActivities(homer.id).size() ;
+		assertEquals (count, pacemaker.getActivities(homer.id).size());
+		
+	    pacemaker.deleteActivities(homer.id);
+		assertEquals (0, pacemaker.getActivities(homer.id).size());
+		
+	   }
+
+
+	@Test
+	   public void testActivityforInvalidUser ()
+	   {
+	    assertThat(pacemaker.getActivities("XXX"), is(nullValue()));   
+	   }
 }

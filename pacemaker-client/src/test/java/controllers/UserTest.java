@@ -46,10 +46,14 @@ public class UserTest {
   public void testFailedUsers() {
 	  User user = pacemaker.createUser(homer.firstname, homer.lastname, homer.email, "XX" );
 	      assertNotEquals(user, homer);
-  }
+	      
+	      
+	      assertNull (pacemaker.getUser("XX"));
+	    }
+ 
 
 	@Test
-	  public void testEmails()
+	  public void testForValidEmails()
 	  {    User homer  = new User ("homer", "simpson", "homer@simpson.com",  "secret");
 	       User homer2 = new User ("homer", "simpson", "homersimpson.com",  "secret"); 
 	  
@@ -57,7 +61,33 @@ public class UserTest {
 	    assertEquals(false, homer2.email.toLowerCase().contains("@".toLowerCase()));
 	  }
 
+	
+	@Test
+	   public void testUserCountsForDeletions ()
+	   {
+		int count = pacemaker.getUsers().size() ;
+		assertEquals (count, pacemaker.getUsers().size());
+		
+		pacemaker.deleteUsers();
+		assertEquals (0, pacemaker.getUsers().size());
+		
+		User homer = pacemaker.createUser("homer", "simpson", "homer@simpson.com",  "secret");
+		assertEquals (1, pacemaker.getUsers().size());
+		pacemaker.deleteUser(homer.id);
+		assertEquals(0, pacemaker.getUsers().size());   
+	   }
 
+	
+	@Test
+	   public void testForDuplicateUsers ()
+	   {
+		pacemaker.deleteUsers();
+		int count = pacemaker.getUsers().size() ;
+
+		pacemaker.createUser("homer", "simpson", "homer@simpson.com",  "secret");
+		pacemaker.createUser("homer", "simpson", "homer@simpson.com",  "secret");
+		// assertNotEquals (count + 2, pacemaker.getFriends().size());
+	   }
 
 }
 

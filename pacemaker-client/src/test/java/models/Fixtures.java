@@ -7,8 +7,7 @@ import java.util.List;
 public class Fixtures {
 
 	
-  public static List<Friend> friends =
-		  new ArrayList<>(Arrays.asList(new Friend("m@w")));
+
 		  
 	
   public static List<User> users =
@@ -24,6 +23,11 @@ public class Fixtures {
           new Activity("walk", "shop", 2.5),
           new Activity("cycle", "school", 4.5)));
 
+  
+  public static List<Friend> friends =
+		  new ArrayList<>(Arrays.asList(new Friend("bart@simpson.com")));
+  
+  
   public static List<Location> locations = new ArrayList<>(Arrays.asList(new Location(23.3, 33.3),
       new Location(34.4, 45.2), new Location(25.3, 34.3), new Location(44.4, 23.3)));
 

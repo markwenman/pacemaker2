@@ -44,9 +44,13 @@ interface PacemakerInterface {
   @POST("/friends")
   Call<Friend> followFriend(@Body Friend friend);
  
+  @DELETE("/friends")
+  Call<String> deleteFriends();
+  
   
   @DELETE("/summary")
   Call<String> deleteSummary();
+ 
   
   @POST("/summary")
   Call<Summary> createSummary(@Body Summary summary);
@@ -62,6 +66,9 @@ interface PacemakerInterface {
   @DELETE("/friends/{email}")
   Call<Friend> deleteFriend(@Path("email") String email);;
 
+  
+  
+  //MESSAGES - attached to Users....
 
   @GET("/users/{id}/messages")
   Call<List<Message>> getMessages(@Path("id") String id);  
@@ -69,10 +76,13 @@ interface PacemakerInterface {
   
   @POST("/users/{id}/messages")
   Call<Message> addMessage(@Path("id") String id,@Body Message message);
-  
+
+  @DELETE("/users/{id}/messages")
+  Call<List<Message>> deleteMessages(@Path("id") String id);  
+
 
   
-  
+ //ACTIVITIES 
   
   @GET("/users/{id}/activities")
   Call<List<Activity>> getActivities(@Path("id") String id);
@@ -82,9 +92,6 @@ interface PacemakerInterface {
 
   @DELETE("/users/{id}/activities")
   Call<String> deleteActivities(@Path("id") String id);
-
-  
- 
   
   @GET("/users/{id}/activities/{activityId}")
   Call<Activity> getActivity(@Path("id") String id, @Path("activityId") String activityId);
@@ -93,7 +100,8 @@ interface PacemakerInterface {
   Call<Location> addLocation(@Path("id") String id, @Path("activityId") String activityId,
       @Body Location location);
 
-Call<Summary> createSummary(String name, double distance);
+  
+// Call<Summary> createSummary(String name, double distance);
 }
 
 
@@ -313,6 +321,19 @@ public class PacemakerAPI {
     return foundUser;
   }
 
+
+  public Friend getFriendByEmail(String email) {
+	    Collection<Friend> friends = getFriends();
+	    Friend foundFriend = null;
+	    for (Friend friend : friends) {
+	      if (friend.email.equals(email)) {
+	        foundFriend = friend;
+	      }
+	    }
+	    return foundFriend;
+	  }
+  
+  
   public User getUser(String id) {
     User user = null;
     try {
@@ -334,6 +355,17 @@ public class PacemakerAPI {
     }
   }
 
+  
+  public void deleteFriends() {
+	    try {
+	      Call<String> call = pacemakerInterface.deleteFriends();
+	      call.execute();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	  }
+  
+  
   public User deleteUser(String id) {
     User user = null;
     try {
@@ -346,6 +378,18 @@ public class PacemakerAPI {
     return user;
   }
 
+
+  public Message deleteMessages(String id) {
+	    Message message = null;
+	    try {
+	      Call<List<Message>> call = pacemakerInterface.deleteMessages(id);
+          call.execute();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	    return message ;
+	  }
+  
   
   public void deleteSummary() {
 	    try {
