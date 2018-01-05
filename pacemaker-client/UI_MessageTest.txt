@@ -1,7 +1,7 @@
 l
-u mark@wenman 
-u jackie@wenman 
-u angus@wenman 
+uf mark@wenman 
+uf jackie@wenman 
+uf angus@wenman 
 lf
 f mark@wenman 
 f jackie@wenman 

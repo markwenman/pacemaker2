@@ -68,7 +68,7 @@ public class FriendsTest {
 		@Test
 		   public void testCountsForFriendDeletes ()
 		   {
-			User user6 = pacemaker.createUser("c", "c", "mark@smith.com", "c");
+			pacemaker.createUser("c", "c", "mark@smith.com", "c");
 			  
 			int count = pacemaker.getFriends().size() ;
 			

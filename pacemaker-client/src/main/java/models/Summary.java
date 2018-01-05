@@ -1,12 +1,12 @@
 package models;
 
 	import static com.google.common.base.MoreObjects.toStringHelper;
-	import java.io.Serializable;
-import java.util.UUID;
+//	import java.io.Serializable;
+
 
 import com.google.common.base.Objects;
 
-	public class Summary  implements Serializable {
+	public class Summary  {
 
 	 public String id;
 	  public String name ;

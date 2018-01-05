@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import java.awt.List;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,7 +17,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import models.Activity;
-import models.Summary;
 import models.User;
 
 public class ActivityTest {

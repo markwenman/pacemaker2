@@ -31,7 +31,7 @@ public class LogoutTest {
 @Test	  
 public void checkIsValidLogoutDetails()
 {
-     	User a = pacemaker.createUser("a", "a", "a@a", "a");
+      pacemaker.createUser("a", "a", "a@a", "a");
 
 	 loggedInUser = pacemaker.getUserByEmail("a@a");
      

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-//Keep me to switch between eclipse and dosc command
-import org.fusesource.jansi.AnsiConsole;
+//Keep me to switch between eclipse and dos command
+//import org.fusesource.jansi.AnsiConsole;
 
 import com.google.common.base.Optional;
 

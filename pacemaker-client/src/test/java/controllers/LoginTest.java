@@ -51,7 +51,7 @@ public void checkForValidLoginDetails()
 @Test	  
 public void checkInvalidLogin()
 {
-	User a = pacemaker.createUser("a", "a", "a@a", "a");
+	 pacemaker.createUser("a", "a", "a@a", "a");
 
 	 loggedInUser = pacemaker.getUserByEmail("a@a");
        

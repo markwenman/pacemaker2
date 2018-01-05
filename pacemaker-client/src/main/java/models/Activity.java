@@ -2,8 +2,7 @@ package models;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import com.google.common.base.Objects;
 

@@ -1,13 +1,11 @@
 package controllers;
 
 import static org.junit.Assert.*;
-import java.io.File;
 import java.util.Collection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import models.Activity;
 import models.User;
 import static models.Fixtures.users;
 

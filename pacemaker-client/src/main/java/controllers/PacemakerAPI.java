@@ -1,6 +1,6 @@
 package controllers;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
 
 import java.util.List;
@@ -112,7 +112,6 @@ interface PacemakerInterface {
 
   @POST("/users/{id}/activities/{activityId}/locations")
   Call<Location> addLocation(@Path("id") String id, @Body Location location);
-
   
  
   @GET("/users/{id}/activities/{activityId}/locations")
@@ -202,26 +201,20 @@ public class PacemakerAPI {
   
   
   
-  
-  
-  
   public User createUser(String firstName, String lastName, String email, String password) {
     User returnedUser = null;
     try {
-   // 	 User user = getUserByEmail(email) ;
-   // 	if (user.id == null)
-    //	{
     	Call<User> call =
           pacemakerInterface.registerUser(new User(firstName, lastName, email, password));
       Response<User> response = call.execute();
       returnedUser = response.body();
-   // 	}
     	} catch (Exception e) {
       System.out.println(e.getMessage());
     }
     return returnedUser;
   }
 
+  
   public Friend createFriend(String email) {
 	   Friend returnedFriend = null;
 	    try {
@@ -234,6 +227,7 @@ public class PacemakerAPI {
 	    }
 	    return returnedFriend;
 	  }
+  
   
 
   public Message createMessage(String id, String messages) {
@@ -249,6 +243,8 @@ public class PacemakerAPI {
 	    return returnedMessage;
 	  }
 
+  
+  
   public Summary createSummary(String name, double distance) {
 	   Summary returnedSummary = null;
 	    try {
@@ -277,6 +273,8 @@ public class PacemakerAPI {
 	    return returnedActivity;
 	  }
 
+  
+  
   public Location addLocation(String id, double latitude, double longitude) {
 	  Location returnedLocation = null ;  
 	  try {
@@ -288,9 +286,6 @@ public class PacemakerAPI {
 	    }
 	  return returnedLocation ;
 	  }
-
-  
-  
   
   
   
@@ -332,9 +327,6 @@ public class PacemakerAPI {
 	    return activities;
 	  }
   
-
-  
-  
   
   
   
@@ -372,8 +364,6 @@ public class PacemakerAPI {
 	  }
   
   
-  
-  
   public User getUserByEmail(String email) {
     Collection<User> users = getUsers();
     User foundUser = null;
@@ -398,19 +388,6 @@ public class PacemakerAPI {
 	  }
   
   
-  //public User getUser(String id) {
-  //  User user = null;
-  //  try {
-  //    Call<User> call = pacemakerInterface.getUser(id);
-  //    Response<User> response = call.execute();
-  //    user = response.body();
-  //  } catch (Exception e) {
-  //    System.out.println(e.getMessage());
-  //  }
-  //  return user;
- // }
-  
-  
   public User getUser(String id) {
 	    Collection<User> users = getUsers();
 	    User foundUser = null;
@@ -421,13 +398,6 @@ public class PacemakerAPI {
 	    }
 	    return foundUser;
 	  }
-
-  
-  
-  
-  
-  
-  
   
   
   

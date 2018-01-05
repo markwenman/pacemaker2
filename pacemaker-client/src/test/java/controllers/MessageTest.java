@@ -4,21 +4,17 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Optional;
 
 import models.User;
-import models.Activity;
 import models.Friend;
 import models.Message;
 
@@ -64,7 +60,7 @@ public class MessageTest {
 	  public void testCreateMessagesCounter()
 	  {
 		    User user = pacemaker.createUser("a", "a","a@a", "a");
-		    Message message = pacemaker.createMessage(user.id, "Test");
+		     pacemaker.createMessage(user.id, "Test");
 		    
 		    int count = pacemaker.getMessages(user.id).size()  ;
 			assertEquals (count, pacemaker.getMessages(user.id).size() ) ;
