@@ -1,0 +1,51 @@
+ru Mark Wenman mark@wenman a
+ru Jackie Wenman jackie@wenman b
+ru Angus Wenman angus@wenman c
+gu
+f mark@wenman
+f jackie@wenman
+f angus@wenman
+lu mark@wenman a
+aa Walk Carlow 12
+aa Run Wicklow 3
+aa Bike Dublin 9
+aa Walk Dublin 4
+aa Run Waterford 3
+aa Run Wicklow 2
+ar
+ar walk
+ar run
+l
+lu jackie@wenman b
+aa Walk Dublin 4
+aa Walk Wicklow 5
+aa Run Wicklow 3
+aa Bike Carlow 3
+aa Walk Dublin 4
+aa Run Waterford 3
+ar
+ar walk
+ar run
+l
+lu angus@wenman c
+aa Walk Dublin 9
+aa Walk Carlow 5
+aa Run Wicklow 3
+aa Walk Carlow 3
+ar
+ar walk
+ar run
+lf
+dlb
+llb carlow
+llb Dublin
+llb WICKLOW
+dlbbt walk
+dlbbt run
+dlbbt bike
+lal walk
+lal run
+l
+far angus@wenman
+far mark@wenman
+

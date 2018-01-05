@@ -45,6 +45,11 @@ public class FriendsTest {
 	    assertNotEquals(friend2.email, user3.email);
 	    
 	    
+	    Friend anotherreturnedfriend = pacemaker.getFriendByEmail(friend3.email);
+	    assertEquals(friend3.email, anotherreturnedfriend.email );
+	    assertEquals(user3.email, anotherreturnedfriend.email );
+	    assertNotEquals(friend2.email, anotherreturnedfriend.email );
+			    
 	  }
 	
 	  @Test
@@ -56,20 +61,14 @@ public class FriendsTest {
 	        user -> pacemaker.createFriend( user.email));
 	    Collection<Friend> returnedFriends = pacemaker.getFriends();
 	    assertEquals(users.size(), returnedFriends.size() );
-	  
-	  
-	   // users.forEach(
-	   //         user -> pacemaker.createUser(user.firstname, user.lastname, user.email, user.password));
-	   //     Collection<User> returnedUsers = pacemaker.getUsers();
-	   //     assertEquals(users.size(), returnedUsers.size());
-	  
 	  }
+
 
 
 		@Test
 		   public void testCountsForFriendDeletes ()
 		   {
-			  User user6 = pacemaker.createUser("c", "c", "mark@smith.com", "c");
+			User user6 = pacemaker.createUser("c", "c", "mark@smith.com", "c");
 			  
 			int count = pacemaker.getFriends().size() ;
 			
@@ -83,8 +82,11 @@ public class FriendsTest {
      	  	pacemaker.deleteFriend("mark@xx.com");
      	  	assertEquals(count ,  pacemaker.getFriends().size());   
 
+     		assertNotEquals(0 ,  pacemaker.getFriends().size());   
+         	  	
      	   pacemaker.deleteFriends();
      		assertEquals(0 ,  pacemaker.getFriends().size());   
+     		
 		   }
 	
 	  
@@ -93,8 +95,18 @@ public class FriendsTest {
 		   {
 			int count = pacemaker.getFriends().size() ;
 
+			// Confirms second friend is not created
 			pacemaker.createFriend( "homer@simpson.com");
 			pacemaker.createFriend( "homer@simpson.com");
 			assertNotEquals (count + 2, pacemaker.getFriends().size());
 		   }	
+
+		  @Test
+		  public void testForFriendString()
+		  {
+			  Friend friendString = pacemaker.createFriend( "string@string.com");
+				     
+			  assertEquals("Friend{"+ friendString.id + ", string@string.com}", friendString.toString());
+		  }
+
 }

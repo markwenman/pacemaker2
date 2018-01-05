@@ -1,9 +1,10 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +24,9 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
+
+// USERS
+
 interface PacemakerInterface {
   @GET("/users")
   Call<List<User>> getUsers();
@@ -41,30 +45,21 @@ interface PacemakerInterface {
 
   
   
+  
+  // FRIENDS
+
+  @GET("/friends")
+  Call<List<Friend>> getFriend();
+
+  @DELETE("/friends/{email}")
+  Call<Friend> deleteFriend(@Path("email") String email);;
+
   @POST("/friends")
   Call<Friend> followFriend(@Body Friend friend);
  
   @DELETE("/friends")
   Call<String> deleteFriends();
   
-  
-  @DELETE("/summary")
-  Call<String> deleteSummary();
- 
-  
-  @POST("/summary")
-  Call<Summary> createSummary(@Body Summary summary);
-
-  @GET("/summary")
-  Call<List<Summary>> getSummary();
-  
-  
-  // Getting ALL so List
-  @GET("/friends")
-  Call<List<Friend>> getFriend();
-
-  @DELETE("/friends/{email}")
-  Call<Friend> deleteFriend(@Path("email") String email);;
 
   
   
@@ -73,13 +68,23 @@ interface PacemakerInterface {
   @GET("/users/{id}/messages")
   Call<List<Message>> getMessages(@Path("id") String id);  
   
-  
   @POST("/users/{id}/messages")
   Call<Message> addMessage(@Path("id") String id,@Body Message message);
 
   @DELETE("/users/{id}/messages")
-  Call<List<Message>> deleteMessages(@Path("id") String id);  
+  Call<String> deleteMessages(@Path("id") String id);  
 
+
+ //SUMMARY - FOR Reporting 
+  
+  @DELETE("/summary")
+  Call<String> deleteSummary();
+   
+  @POST("/summary")
+  Call<Summary> createSummary(@Body Summary summary);
+
+  @GET("/summary")
+  Call<List<Summary>> getSummary();
 
   
  //ACTIVITIES 
@@ -87,6 +92,10 @@ interface PacemakerInterface {
   @GET("/users/{id}/activities")
   Call<List<Activity>> getActivities(@Path("id") String id);
 
+  @GET("/users/{id}/activities")
+  Call<List<Activity>> listActivities(@Path("id") String id, @Path("sortBy") String sortBy);
+  
+  
   @POST("/users/{id}/activities")
   Call<Activity> addActivity(@Path("id") String id, @Body Activity activity);
 
@@ -96,12 +105,19 @@ interface PacemakerInterface {
   @GET("/users/{id}/activities/{activityId}")
   Call<Activity> getActivity(@Path("id") String id, @Path("activityId") String activityId);
 
-  @POST("/users/{id}/activities/{activityId}/locations")
-  Call<Location> addLocation(@Path("id") String id, @Path("activityId") String activityId,
-      @Body Location location);
 
   
-// Call<Summary> createSummary(String name, double distance);
+ // LOCATIONS within Activities 
+  
+
+  @POST("/users/{id}/activities/{activityId}/locations")
+  Call<Location> addLocation(@Path("id") String id, @Body Location location);
+
+  
+ 
+  @GET("/users/{id}/activities/{activityId}/locations")
+  Call<List<Location>> getLocations(@Path("id") String id, @Path("activityId") String activityId);
+  
 }
 
 
@@ -155,17 +171,22 @@ public class PacemakerAPI {
 	    return messages;
 	  }
 
-  public Collection<Activity> getActivities(String id) {
-	    Collection<Activity> activities = null;
+
+  
+  
+  public List<Location> getLocations(String id, String activityId) {
+	    List<Location> locations = null;
 	    try {
-	      Call<List<Activity>> call = pacemakerInterface.getActivities(id);
-	      Response<List<Activity>> response = call.execute();
-	      activities = response.body();
+	      Call<List<Location>> call = pacemakerInterface.getLocations(id, activityId);
+	      Response<List<Location>> response = call.execute();
+	      locations = response.body();
 	    } catch (Exception e) {
 	      System.out.println(e.getMessage());
 	    }
-	    return activities;
+	    return locations;
 	  }
+  
+  
   
   public Collection<Summary> getSummary() {
 	    Collection<Summary> summary = null;
@@ -187,11 +208,15 @@ public class PacemakerAPI {
   public User createUser(String firstName, String lastName, String email, String password) {
     User returnedUser = null;
     try {
-      Call<User> call =
+   // 	 User user = getUserByEmail(email) ;
+   // 	if (user.id == null)
+    //	{
+    	Call<User> call =
           pacemakerInterface.registerUser(new User(firstName, lastName, email, password));
       Response<User> response = call.execute();
       returnedUser = response.body();
-    } catch (Exception e) {
+   // 	}
+    	} catch (Exception e) {
       System.out.println(e.getMessage());
     }
     return returnedUser;
@@ -252,7 +277,23 @@ public class PacemakerAPI {
 	    return returnedActivity;
 	  }
 
+  public Location addLocation(String id, double latitude, double longitude) {
+	  Location returnedLocation = null ;  
+	  try {
+	      Call<Location> call =
+	          pacemakerInterface.addLocation(id, new Location(latitude, longitude));
+	      call.execute();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	  return returnedLocation ;
+	  }
 
+  
+  
+  
+  
+  
   public Friend deleteFriend(String email) {
 	    Friend friends = null;
 	    try {
@@ -264,12 +305,33 @@ public class PacemakerAPI {
 	    }
 	    return friends;
 	  }
-  
-  
+ 
 
-  public List<Activity> listActivities(String userId, String sortBy) {
-    return null;
-  }
+  public Collection<Activity> getActivities(String id) {
+	    Collection<Activity> activities = null;
+	    try {
+	      Call<List<Activity>> call = pacemakerInterface.getActivities(id);
+	      Response<List<Activity>> response = call.execute();
+	      activities = response.body();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	    return activities;
+	  }
+
+  
+  public Collection<Activity> listActivities(String id, String sortBy) {
+	    Collection<Activity> activities = null;
+	    try {
+	      Call<List<Activity>> call = pacemakerInterface.listActivities(id, sortBy);
+	      Response<List<Activity>> response = call.execute();
+	      activities = response.body();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	    return activities;
+	  }
+  
 
   
   
@@ -300,16 +362,18 @@ public class PacemakerAPI {
     }
   }
 
-  public void addLocation(String id, String activityId, double latitude, double longitude) {
-    try {
-      Call<Location> call =
-          pacemakerInterface.addLocation(id, activityId, new Location(latitude, longitude));
-      call.execute();
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
-  }
-
+  public void deleteMessages(String id) {
+	    try {
+	    	Call<String> call = pacemakerInterface.deleteMessages(id);
+        call.execute();
+	    } catch (Exception e) {
+	      System.out.println(e.getMessage());
+	    }
+	  }
+  
+  
+  
+  
   public User getUserByEmail(String email) {
     Collection<User> users = getUsers();
     User foundUser = null;
@@ -334,17 +398,38 @@ public class PacemakerAPI {
 	  }
   
   
+  //public User getUser(String id) {
+  //  User user = null;
+  //  try {
+  //    Call<User> call = pacemakerInterface.getUser(id);
+  //    Response<User> response = call.execute();
+  //    user = response.body();
+  //  } catch (Exception e) {
+  //    System.out.println(e.getMessage());
+  //  }
+  //  return user;
+ // }
+  
+  
   public User getUser(String id) {
-    User user = null;
-    try {
-      Call<User> call = pacemakerInterface.getUser(id);
-      Response<User> response = call.execute();
-      user = response.body();
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
-    return user;
-  }
+	    Collection<User> users = getUsers();
+	    User foundUser = null;
+	    for (User user : users) {
+	      if (user.id.equals(id)) {
+	        foundUser = user;
+	      }
+	    }
+	    return foundUser;
+	  }
+
+  
+  
+  
+  
+  
+  
+  
+  
   
   public void deleteUsers() {
     try {
@@ -379,16 +464,7 @@ public class PacemakerAPI {
   }
 
 
-  public Message deleteMessages(String id) {
-	    Message message = null;
-	    try {
-	      Call<List<Message>> call = pacemakerInterface.deleteMessages(id);
-          call.execute();
-	    } catch (Exception e) {
-	      System.out.println(e.getMessage());
-	    }
-	    return message ;
-	  }
+
   
   
   public void deleteSummary() {

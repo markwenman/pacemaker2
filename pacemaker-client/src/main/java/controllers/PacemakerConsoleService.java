@@ -48,7 +48,7 @@ private int Rank = 0 ;
 // LOGIN / LOGOUT
   
   @Command(description = "Login: Log in a registered user in to pacemaker")
-  public void login(@Param(name = "email") String email,
+  public void loginUser(@Param(name = "email") String email,
       @Param(name = "password") String password) {
 
 	  try {
@@ -66,7 +66,7 @@ private int Rank = 0 ;
     	  }
     	  else
     	  {
-    		  Info.err("Error on login","You are already logged in as" + user.get().lastname);
+    		  Info.err("Error on login","You are already logged in as" + user.get().firstname + " " + user.get().lastname);
     	  }
    	  }
     }
@@ -111,7 +111,7 @@ private int Rank = 0 ;
   // Check for duplicate email
   
   @Command(description = "Register: Create an account for a new user")
-  public void register(@Param(name = "first name") String firstName,
+  public void registerUser(@Param(name = "first name") String firstName,
       @Param(name = "last name") String lastName, @Param(name = "email") String email,
       @Param(name = "password") String password) {
 	  
@@ -168,7 +168,7 @@ private int Rank = 0 ;
   
   
   @Command(description = "Message Friend: send a message to a friend")
-  public void addMessage(@Param(name = "email") String email, @Param(name = "messages") String messages) {
+  public void MessageFriend(@Param(name = "email") String email, @Param(name = "messages") String messages) {
 	
 	  User Friendmsg = paceApi.getUserByEmail(email) ;
 	  Optional<User> user = Optional.fromNullable(Friendmsg);
@@ -228,7 +228,7 @@ private int Rank = 0 ;
 	    if (user.isPresent()) {
 	            Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(loggedInUser.getId(), id));
                 if (activity.isPresent()) {
-                   paceApi.addLocation(loggedInUser.getId(), activity.get().id, latitude, longitude);
+                   paceApi.addLocation(activity.get().id, latitude, longitude);
                 Info.info("New record added");;
     } 
                 else {
@@ -247,25 +247,28 @@ private int Rank = 0 ;
   // DELETE RECORDS
 
        @Command(description="Unfollow Friends: Stop following a friend")
-       public void unfollow (@Param(name="email") String email)
+       public void unFollow (@Param(name="email") String email)
      {
     
 	 User Friendmsg = paceApi.getUserByEmail(email) ;
 	  Optional<User> user = Optional.fromNullable(Friendmsg);
-    
+        
+	 // System.out.println(Friendmsg.id) ;
+	  
     if (user.isPresent())
        {
          String decision;
          Scanner kbd = new Scanner (System.in);
 
-         System.out.println("Are you sure you want to delete this Friend ? : yes or no");
+         System.out.println("Are you sure you want to delete Friend "+ email + "? : yes or no");
          decision = kbd.nextLine();
       
          switch(decision){
          case "yes":
          {
-            paceApi.deleteMessages(Friendmsg.id);	 
-        	 paceApi.deleteFriend(email);
+             
+        	 paceApi.deleteMessages(Friendmsg.id);	 
+          	 paceApi.deleteFriend(email);
          
         	 Info.info("Friend and all my messages to them are Deleted");    
          break ;
@@ -295,7 +298,7 @@ private int Rank = 0 ;
   
   
   @Command(description = "List Users: List all users emails, first and last names")
-  public void listUsers() {
+  public void getUsers() {
     console.renderUsers(paceApi.getUsers());
   }
 
@@ -320,8 +323,17 @@ private int Rank = 0 ;
   public void listMessages() {
 		    Optional<User> user = Optional.fromNullable(loggedInUser);
 		    if (user.isPresent()) {
-		      console.renderMessages(paceApi.getMessages(user.get().id));
+		    	  System.out.println (PURPLE + "\n---------------------------------------" + RESET);
+    		      System.out.println (PURPLE +" Messages for "+user.get().firstname +" "+ user.get().lastname            + RESET);
+    		      System.out.println (PURPLE + "---------------------------------------" + RESET);
+    		     
+		    	
+		    	console.renderMessages(paceApi.getMessages(user.get().id));
  	  }
+			  else
+		  	  {
+		  		  Info.err("List Messages","You need to be viewing Messages");
+		  	  } 	    			
 
 	  
   }
@@ -711,7 +723,7 @@ System.out.println (PURPLE + "--Friend-------Distance----Rank--" + RESET);
 	     		          
 	   		    	   if(nextact.type.equalsIgnoreCase(type) ) {
 	   		    	 
-	   		    		System.out.println(  nextact.location );
+	   		    		System.out.println("      " +  nextact.location );
 	   		    		}
 	   		      }
 	  }

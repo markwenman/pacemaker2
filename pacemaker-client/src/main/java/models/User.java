@@ -56,9 +56,9 @@ public class User implements Serializable {
     return toStringHelper(this).addValue(id)
         .addValue(firstname)
         .addValue(lastname)
-        .addValue(password)
         .addValue(email)
-        .toString();
+        .addValue(password)
+            .toString();
   }
 
   @Override

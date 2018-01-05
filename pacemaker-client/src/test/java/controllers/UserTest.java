@@ -6,6 +6,8 @@ import java.util.Collection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import models.Activity;
 import models.User;
 import static models.Fixtures.users;
 
@@ -27,13 +29,33 @@ public class UserTest {
   }
   
   @Test
-  public void testCreateUser() {
+  public void testCreateUserValidatingOnEmails() {
     User user = pacemaker.createUser(homer.firstname, homer.lastname, homer.email, homer.password);
     assertEquals(user, homer);
     User user2 = pacemaker.getUserByEmail(homer.email);
     assertEquals(user2, homer);
+    
+    
+ 
+       
+    assertEquals(user2.firstname , homer.firstname);
+    assertEquals(user2.lastname , homer.lastname);
+    assertEquals(user2.email , homer.email);
+ 
+
+ //   User user3 = pacemaker.getUser(homer.id);
+    
+    
+  // assertEquals(user3, homer);
+    
+
   }
 
+  
+  
+
+  
+  
   @Test
   public void testCreateUsers() {
     users.forEach(
@@ -86,9 +108,18 @@ public class UserTest {
 
 		pacemaker.createUser("homer", "simpson", "homer@simpson.com",  "secret");
 		pacemaker.createUser("homer", "simpson", "homer@simpson.com",  "secret");
-		// assertNotEquals (count + 2, pacemaker.getFriends().size());
+		 assertNotEquals (count + 2, pacemaker.getFriends().size());
 	   }
 
+	  @Test
+	  public void testForUserString()
+	  {
+		  User homer = pacemaker.createUser("homer", "simpson", "homer@simpson.com",  "secret");
+			     
+		  assertEquals("User{"+ homer.id + ", homer, simpson, homer@simpson.com, secret}", homer.toString());
+	  }
+	
+	
 }
 
 

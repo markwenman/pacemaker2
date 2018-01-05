@@ -115,7 +115,7 @@ public class AsciiTableParser extends Parser {
 	      if (!messages.isEmpty()) {
 	        List<Message> messageList = new ArrayList<Message>(messages);
 	        IASCIITableAware asciiTableAware = new CollectionASCIITableAware<Message>(messageList,
-	        		 "id", "messages");
+	        		 "messages");
 	        System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
 	      }
 	 //     System.out.println("ok");

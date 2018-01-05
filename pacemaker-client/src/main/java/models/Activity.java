@@ -2,6 +2,9 @@ package models;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.base.Objects;
 
 public class Activity implements Serializable {
@@ -10,7 +13,9 @@ public class Activity implements Serializable {
   public String type;
   public String location;
   public double distance;
-
+  
+ // public List<Location> route = new ArrayList<>();
+  
   public Activity() {
   }
 
@@ -43,6 +48,7 @@ public class Activity implements Serializable {
       return Objects.equal(type, other.type)
           && Objects.equal(location, other.location)
           && Objects.equal(distance, other.distance);
+      //    && Objects.equal(route,     other.route);  
     } else {
       return false;
     }
@@ -54,6 +60,7 @@ public class Activity implements Serializable {
         .addValue(type)
         .addValue(location)
         .addValue(distance)
+   //     .addValue(route)
         .toString();
   }
 

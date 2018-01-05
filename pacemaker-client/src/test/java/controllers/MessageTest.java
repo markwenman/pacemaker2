@@ -55,6 +55,8 @@ public class MessageTest {
 		   
 	    assertEquals(message.messages, "Test");
 	    assertNotEquals(message.messages, "Test2");
+	    
+	    assertEquals(1 ,  pacemaker.getMessages(user.id).size());   
     }
 	
 
@@ -75,6 +77,28 @@ public class MessageTest {
 		    		pacemaker.createMessage(user.id, "Test4");
 			  
 		    assertEquals (count + 3, pacemaker.getMessages(user.id).size() ) ;
+
+		    
+			  pacemaker.deleteMessages(user.id);
+	    		pacemaker.createMessage(user.id, "Test1");
+	    		pacemaker.createMessage(user.id, "Test2");
+	    		pacemaker.createMessage(user.id, "Test3");
+
+		    
+			   ArrayList<Message> reportMessages = new ArrayList<>();
+			      Collection<Message> usersMessages = pacemaker.getMessages(user.id);
+			      usersMessages.forEach(a -> {
+			          reportMessages.add(a);
+			      });
+		    
+			      // As these are stored in no order , by guid, then the test will never be exact
+			      
+			      assertEquals ((reportMessages.get(0).messages.substring(0,4)),  "Test" ) ;
+			      assertEquals ((reportMessages.get(1).messages.substring(0,4)),  "Test" ) ;
+			      assertEquals ((reportMessages.get(2).messages.substring(0,4)),  "Test" ) ;
+			      
+				  pacemaker.deleteMessages(user.id);
+			      
 		    
 	  }
 	  
@@ -104,29 +128,41 @@ public class MessageTest {
               pacemaker.deleteMessages(Friendid.id);
     		  pacemaker.createMessage(Friendid.id, "Test"); 
 		      count2 = count2 + 1 ;
+		      
+		      assertEquals(1, pacemaker.getMessages(Friendid.id).size());
 		  }
 
-	    assertEquals(count, 2);
-	    assertEquals(count2, 2);
+	    assertEquals(count, 3);
+	    assertEquals(count2, 3);
+	    
+
 	    
 		  }	
 	  
 	  @Test
-	  public void testDeleteMessageForUser() {
+	  public void testDeleteFriendandMessages() {
 
-		  User a = pacemaker.createUser("a", "a","a@a", "a");
+		  User x = pacemaker.createUser("x", "x","x@x", "x");
 
-		  pacemaker.createFriend("a@a");
-		  User Friendid = pacemaker.getUserByEmail(a.email) ;
-		  pacemaker.deleteMessages(Friendid.id);
+		  pacemaker.createFriend("x@x");
+		  User Friendid = pacemaker.getUserByEmail(x.email) ;
+
 		  pacemaker.createMessage(Friendid.id, "Test"); 
+		  pacemaker.createMessage(Friendid.id, "Test2"); 
+
 		  
-		//  assertEquals(1, pacemaker.getMessages(Friendid.id).size());
+		  assertEquals(2, pacemaker.getMessages(Friendid.id).size());
 		      
 		  
-		//  pacemaker.deleteMessages(Friendid.id);
-		//  assertEquals(0, pacemaker.getMessages(Friendid.id).size());
+		  pacemaker.deleteMessages(Friendid.id);
+		  
+		  pacemaker.deleteFriend(Friendid.id);
+		  
+		  
 
+		  assertEquals(pacemaker.getMessages(Friendid.id).size(), 0);
+	//	  assertEquals(pacemaker.getFriendByEmail(Friendid.email), "[]");
+	  	   
 		  
 		  
 		  

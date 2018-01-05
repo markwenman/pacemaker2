@@ -1,0 +1,26 @@
+l
+u mark@wenman 
+u jackie@wenman 
+u angus@wenman 
+lf
+f mark@wenman 
+f jackie@wenman 
+f angus@wenman 
+lf
+maf testall
+mf mark@wenman marky
+mf mark@wenman marky2
+mf jackie@wenman jacky
+mf angus@wenman angusy
+lu mark@wenman a
+lm
+l
+lu jackie@wenman b
+lm
+l
+lu angus@wenman c
+lm
+l
+
+
+ 
